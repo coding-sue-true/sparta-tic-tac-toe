@@ -13,3 +13,16 @@ Your deliverables:-
 7) The clear button should clear the board
 8) When a winning condition is present you should display a winner, either X or Y
 9) The program should use functions, loops, JQuery selectors and JQuery events
+
+### List of what was delivered
+6/9 (1, 2, 3, 4, 5, 9)
+
+### Most Difficult
+* Clear vision of how to write the code
+* Still difficult to know where to start
+* Global variables are also still difficult to achieve (in terms of what I really need to be global for the game to start)
+* Switching from moveOne to moveTwo
+
+### What went well
+* Add the right class to the element
+* Although it's not working, pseudo code was easier to write
