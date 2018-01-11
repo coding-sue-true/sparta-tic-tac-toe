@@ -1,104 +1,93 @@
-$(function(event) {
-  console.log('DOM is ready');
+$(function(){
+  var $boxes = $("td");
+  var $turnText = $(".playerTurn")
+  var counter = 1;
+  var winCounter = 0;
+  var OMoves = [];
+  var XMoves = [];
 
-  //reset button has to return to original variables (if I declare global variables, will have to call them again, follow calculator logic)
-  //var count will be counting everytime a button is clicked, if it reaches 9, we will have a tie
-  var moveOne = true;
-  var moveTwo = false;
-  var count = 1;
-  var conditionsArray = [];
-  var winningConditions = [[2,4,6], [6,7,8], [0,1,2], [0,4,8], [3,4,5], [0,3,6], [2,5,8], [1,4,7]];
+  var $winningCombinations = $([[0,1,2],[3,4,5],[6,7,8],
+  [0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]]);
 
-
-  // function to randomly obtain X or O
-  function xOrO() {
-    if (Math.floor(Math.random() * 2) < 1) {
-      console.log('X');
-      return 'X';
-    } else {
-      console.log('O');
-      return 'O';
-    }
+  function start(){
+    addXandOListener();
+    addResetListener();
   }
-  var input = xOrO();
 
+  function addXandOListener(){
+    $boxes.click(addXorO)
+  }
 
+  function addXorO(){
+    var $box = $(this);
+    // If the box has nothing then lets go on to add an X or O
+    if ($box.html().length === 0){
+      // If counter is even add an O
+      if (counter % 2 === 0) {
+        // Push the move into the OMoves array
+        OMoves.push(parseInt($box.attr("data-num")));
+        // Set the value and class of the element clicked
+        $box.html("O").attr("class","O");
+        // Set the text of the turn element
+        $turnText.html("It is X's turn");
+        // increment the counter so the turn alternate
+        counter++;
+        // After each click check for a win condition
+        checkForWin(OMoves, "O");
+      }
+      else {
+        XMoves.push(parseInt($box.attr("data-num")));
+        $box.html("X").attr("class","X");
+        $turnText.innerHTML = "It is O's turn";
+        counter++;
+        checkForWin(XMoves, "X");
+      }
 
-  $('td').on('click', function(){
-    conditionsArray.push($(this).attr('data-num'));
-    console.log(conditionsArray);
-    console.log("I've been clicked");
-    $(this).html(input);
-    if (input === 'X') {
-      $(this).addClass('X');
-    } else {
-      $(this).addClass('O');
+    // If the counter is equal to 10 it means the board is full
+    if (counter >= 10){
+      $turnText.html("Game Over!");
+      var conf = confirm("It's a draw, do you want to play again?");
+      if(conf){
+        resetBoard();
+      }
     }
-    count ++;
-  })
-  // debugger
+   }
+  }
 
+  // Add reset button listener to call the rest board function
+  function addResetListener(){
+    $("#reset").click(resetBoard);
+  }
 
-  // for each click, store the data-num into an array
-  function winningOptions() {
-    //store click button information into an array
-    $('td').each(function(index, square){
-      var conditions = [];
-      conditions.push($(this).attr('data-num'));
-      console.log(conditions);
+  // Lets check to see if there is a winning combination in out moves array
+  function checkForWin(movesArray, name){
+    $winningCombinations.each(function(index, combination){
+      // win counter
+      winCounter = 0;
+      $(combination).each(function(index, winningBox){
+        // If moves array contains winning box add 1 to winCounter
+        if(movesArray.indexOf(winningBox) !== -1){
+          // Add one
+          winCounter++;
+        }
+        // If counter gets to we have a winning combination
+        if(winCounter === 3){
+          alert("Game over, " + name + " wins!");
+          resetBoard();
+        }
+      })
     })
   }
-  winningOptions();
 
-});
+  // Reset our board to its original state
+  function resetBoard(){
+    $boxes.html("").attr("class", "clear")
+    $turnText.html("It is X's turn");
+    OMoves = [];
+    XMoves = [];
+    winCounter = 0;
+    counter = 1;
+  }
 
-
-
-
-//   if (conditions = true) {
-//     alert ('Victoriaaaa');
-//   } else if ( count === 9 ) {
-//     alert ("It's a tie!")
-//   }
-// });
-
-
-
-
-// Daniel's code, this code changes between player one and two either if the counter is even or odd
-// var oMoves = [];
-// var xMoves = [];
-// function listeners() {
-//   $('td').click(function(event){
-//     counter ++;
-//     if (counter % 2 === 0) {
-//       $(this).addClass('X').html("X");
-//       xMoves.push($(this).attr('data-num'));
-//       console.log("--- x", xMoves);
-//       checkForWin(xMoves);
-//     } else {
-//       $(this).addClass('O').html("O");
-//       oMoves.push($(this).attr('data-num'));
-//       console.log("--- o", oMoves);
-//     }
-//   })
-// }
-
-
-//looping through all the winningOptions ---- this is part of the solution code Richard explained on the board, var and function names do not apply to my code
-// function checkForWin(movesArray, name) {
-//   checkForFullBoard
-//   $winningOptions.each(function(index, options) {
-//     winCounter = 0;
-//     $(combination).each(function(index, number) {
-//       //this is where we check if the number we got matches with the ones in the array of arrays
-//       if (movesArray.indexOf(number) !== -1 ) {
-//         winCounter++;
-//       }
-//       if (winCounter === 3) {
-//         alert("Game Over" + name + " wins!");
-//         resetBoard();
-//       }
-//     })
-//   })
-// }
+  start();
+})
