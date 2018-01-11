@@ -1,5 +1,14 @@
 # JQuery Selectors and Events - TicTacToe
 
+
+## Main
+
+The main task of this homework was to build a Tic Tac Toe game, using JQuery.
+The code used in here was the solution code. I only got it working on the console and not on the screen.
+There's also a version of the code in JavaScript provided by our Mentor.
+
+## Homework Description
+
 You challenge is build the game TicTacToe in the browser using JQuery. We will give you the html layout for the game. We will need you to use what you have learnt so far with selecting things with JQuery and creating event listeners with JQuery to create this game.
 
 Your deliverables:-
